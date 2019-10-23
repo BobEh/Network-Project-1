@@ -1,0 +1,6 @@
+﻿  serverMain.cpp
+D:\School - GDP\Network Programming\Projects\Network-Project-1\Project1\Project1\serverMain.cpp(128,10): warning C4477:  'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'SOCKET'
+D:\School - GDP\Network Programming\Projects\Network-Project-1\Project1\Project1\serverMain.cpp(128,10): message :  consider using '%lld' in the format string
+D:\School - GDP\Network Programming\Projects\Network-Project-1\Project1\Project1\serverMain.cpp(128,10): message :  consider using '%Id' in the format string
+D:\School - GDP\Network Programming\Projects\Network-Project-1\Project1\Project1\serverMain.cpp(128,10): message :  consider using '%I64d' in the format string
+  Project1.vcxproj -> D:\School - GDP\Network Programming\Projects\Network-Project-1\Project1\x64\Debug\Server.exe
