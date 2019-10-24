@@ -123,7 +123,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="clientBuffer.cpp" />
     <ClCompile Include="clientMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="clientBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
