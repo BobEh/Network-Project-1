@@ -4,6 +4,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <stdlib.h>
+#include <map>
 #include <stdio.h>
 #include "serverBuffer.h"
 
@@ -22,6 +23,8 @@ struct ClientInfo {
 	char buffer[DEFAULT_BUFLEN];
 	int bytesRECV;
 };
+
+std::map<std::string /*room*/, std::vector<ClientInfo*> /*client*/> roomCount;
 
 int TotalClients = 0;
 ClientInfo* ClientArray[FD_SETSIZE];
@@ -182,7 +185,7 @@ int main(int argc, char** argv)
 
 		// Call our select function to find the sockets that
 		// require our attention
-		printf("Waiting for select()...\n");
+		//printf("Waiting for select()...\n");
 		total = select(0, &ReadSet, NULL, NULL, &tv);
 		if (total == SOCKET_ERROR)
 		{
@@ -191,7 +194,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			printf("select() is successful!\n");
+			//printf("select() is successful!\n");
 		}
 
 		// #4 Check for arriving connections on the listening socket
@@ -260,8 +263,8 @@ int main(int argc, char** argv)
 				}
 				else
 				{
-					printf("WSARecv() is OK!\n");
-					printf("Bytes received: %d\n", RecvBytes);
+					//printf("WSARecv() is OK!\n");
+					//printf("Bytes received: %d\n", RecvBytes);
 					if (RecvBytes == 0)
 					{
 						RemoveClient(i);
@@ -275,7 +278,65 @@ int main(int argc, char** argv)
 					{
 
 						pServerBuffer->writeString(client->dataBuf.buf);
-						std::cout << "Length of message sent: " << pServerBuffer->readString(client->dataBuf.len) << std::endl;
+						std::cout << "Content of message sent: " << pServerBuffer->readString(client->dataBuf.len) << std::endl;
+						std::string message = client->dataBuf.buf;
+						std::string command = "";
+						std::string content = "";
+						for (int i = 1; i < 5; i++)
+						{
+							command += message.at(i);
+						}
+						for (int i = 5; i < client->dataBuf.len; i++)
+						{
+							content += message.at(i);
+						}
+						if (command == "join")
+						{
+							if (roomCount.size() == 0)
+							{
+								std::vector<ClientInfo*> clientList;
+								clientList.push_back(client);
+								roomCount.insert({ content, clientList });
+								std::cout << "Successfully created and joined room: " << content << std::endl;
+							}
+							else
+							{
+								for (std::map<std::string, std::vector<ClientInfo*>>::iterator itMap = roomCount.begin(); itMap != roomCount.end(); itMap++)
+								{
+									if (content == itMap->first)
+									{
+										itMap->second.push_back(client);
+										std::cout << "Successfully joined room: " << itMap->first << std::endl;
+									}
+									else
+									{
+										std::vector<ClientInfo*> clientList;
+										clientList.push_back(client);
+										roomCount.insert({ content, clientList });
+										std::cout << "Successfully created and joined room: " << content << std::endl;
+									}
+								}
+							}
+						}
+
+						else
+						{
+							for (std::map<std::string, std::vector<ClientInfo*>>::iterator itMap = roomCount.begin(); itMap != roomCount.end(); itMap++)
+							{
+								if (command == itMap->first)
+								{
+									itMap->second.push_back(client);
+									std::cout << "Successfully sent message: " << itMap->first << " to room: " << command << std::endl;
+								}
+								else
+								{
+									std::vector<ClientInfo*> clientList;
+									clientList.push_back(client);
+									roomCount.insert({ command, clientList });
+									std::cout << "Successfully created and joined room: " << command << " and sent message: " << content << std::endl;
+								}
+							}
+						}
 
 						// RecvBytes > 0, we got data
 						iResult = WSASend(

@@ -1,3 +1,0 @@
-﻿  serverMain.cpp
-D:\School - GDP\Network Programming\Projects\Network-Project-1\Project1\Project1\serverMain.cpp(161,8): warning C4101:  'flags': unreferenced local variable
-  Project1.vcxproj -> D:\School - GDP\Network Programming\Projects\Network-Project-1\Project1\x64\Debug\Server.exe

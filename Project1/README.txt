@@ -1,0 +1,1 @@
+To run this project just click the start button in the toolbar at the top of visual studio. Press any button to send the pre-formatted message from the client to the server where it will be handled accordingly.
